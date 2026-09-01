@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.yumaheymans/genmagic",
+  "title": "GenMagic",
+  "description": "Generate text, images, speech, music, and video with any AI model, from one credit balance.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/yumaheymans/genmagic-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://genmagic.co/developers?utm_source=mcp-registry&utm_medium=listing&utm_campaign=agent-ecosystem",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://genmagic.co/api/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "GenMagic API key as a Bearer token (gm_live_...), created at https://genmagic.co/app/settings",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
