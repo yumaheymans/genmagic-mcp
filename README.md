@@ -2,11 +2,12 @@
 
 **One [Model Context Protocol](https://modelcontextprotocol.io) server that lets any AI agent generate text, images, speech, music, and video, billed against a single prepaid credit balance.**
 
-GenMagic is one studio and one API for every generative AI model, in every medium. This repository is the connection guide and registry descriptor for its **remote MCP server**: point any MCP client at one URL, drop in your key, and your agent gets six generation tools that route to the best underlying model automatically.
+GenMagic is one studio and one API for every generative AI model, in every medium. This repository is the connection guide and registry descriptor for its **remote MCP server**: point any MCP client at one URL, drop in your key, and your agent gets six generation tools plus `list_models`: it can pick any of GenMagic's 450+ models (GPT, Claude, Gemini, Veo, Kling, Seedance, FLUX, Recraft and more) by id, or leave the choice to GenMagic.
 
 - **Endpoint:** `https://genmagic.co/api/mcp`
 - **Transport:** Streamable HTTP (stateless JSON-RPC)
-- **Auth:** `Authorization: Bearer gm_live_...` (create a key at <https://genmagic.co/app/settings>)
+- **Version:** 1.1.0
+- **Auth:** `Authorization: Bearer gm_live_...` (create a key at <https://genmagic.co/get-api-key>)
 - **Hosted:** nothing to install or run. It is a live remote server.
 - **Registry:** listed on the [Official MCP Registry](https://registry.modelcontextprotocol.io) as `io.github.yumaheymans/genmagic` (see [`server.json`](./server.json)).
 
@@ -14,18 +15,21 @@ GenMagic is one studio and one API for every generative AI model, in every mediu
 
 | Tool | What it does |
 | --- | --- |
-| `generate_text` | Generate text, code, an SVG graphic, or a full web page (optional `type`). |
-| `generate_image` | Generate or edit an image; `type=logo` for a brand mark. |
-| `generate_speech` | Text to speech, voiced verbatim. |
-| `generate_music` | An original music track from a description. |
-| `create_video` | Start an async video job (returns a job id, charges nothing yet). |
+| `list_models` | The live catalog, newest first: each model's id, price and key details (context window and capabilities for text, voices for speech, resolutions, clip lengths and sound for video). Filter by `category`, `search` or `capability`. No key needed. |
+| `generate_text` | Generate text, code, an SVG graphic, or a full web page (optional `type`, optional `model`). |
+| `generate_image` | Generate or edit an image; `type=logo` for a brand mark; optional `model`. |
+| `generate_speech` | Text to speech, voiced verbatim; optional `model` and `voice`. |
+| `generate_music` | An original music track from a description; optional `model`. |
+| `create_video` | Start an async video job with any text-to-video model, `duration`, `resolution` and `generate_audio` it supports (returns a job id, charges nothing yet). |
 | `get_video` | Poll a video job; charges once, on completion. |
 
-`initialize`, `ping`, and `tools/list` are open; `tools/call` requires your key. Every tool result self-describes its spend in the MCP `_meta` field (`cost_cents`, `credits_remaining`, and a `rate` object), so an agent paces itself and tracks its budget from the result it already has.
+Every generate tool takes an optional `model` id from `list_models`. A model id that does not run that kind of output is refused with a pointer to `list_models`, never swapped for another model; leave `model` out and GenMagic picks a well-priced default.
+
+`initialize`, `ping`, `tools/list` and `list_models` are open; the generate tools require your key. Every tool result self-describes its spend under the MCP `_meta` key `genmagic.ai/usage` (`model` that ran, `cost_cents`, `credits_remaining`, and a `rate` object), so an agent paces itself and tracks its budget from the result it already has.
 
 ## Connect
 
-Create a key at <https://genmagic.co/app/settings>, then add the server to your client.
+Create a key at <https://genmagic.co/get-api-key> (sign up free and verify your email), then add the server to your client.
 
 ### Claude Code
 
@@ -80,7 +84,7 @@ curl https://genmagic.co/api/mcp \
 
 ## How billing works
 
-There is no separate agent meter. Every generation, from the studio, the REST API, or this MCP server, draws the underlying model's real provider cost from one prepaid USD balance (1 credit = 1 US cent). New accounts get a one-time $0.50 starter balance; top up in $5 to $100 increments, or subscribe for a renewing balance with a subscriber bonus and commercial-use rights. `create_video` and a still-rendering `get_video` poll charge nothing; the clip's cost lands on the poll that completes it. See <https://genmagic.co/pricing>.
+There is no separate agent meter. Every generation, from the studio, the REST API, or this MCP server, draws the underlying model's real provider cost from one prepaid USD balance (1 credit = 1 US cent). A new account gets a one-time $0.50 starter balance after email verification, one per person; top up in $5 to $100 increments, or subscribe for a renewing balance with a subscriber bonus and commercial-use rights. `create_video` and a still-rendering `get_video` poll charge nothing; the clip's cost lands on the poll that completes it. See <https://genmagic.co/pricing>.
 
 ## On-brand generation
 
@@ -88,7 +92,7 @@ Turn on **personalization** once in the app (connect a website or LinkedIn) and 
 
 ## Links
 
-- Studio and API keys: <https://genmagic.co>
+- Studio: <https://genmagic.co> · API key: <https://genmagic.co/get-api-key>
 - Full API + MCP docs: <https://genmagic.co/developers>
 - Machine-readable discovery: [`/.well-known/mcp.json`](https://genmagic.co/.well-known/mcp.json) · [`/llms.txt`](https://genmagic.co/llms.txt) · [`/openapi.json`](https://genmagic.co/openapi.json)
 - Pricing: <https://genmagic.co/pricing>
