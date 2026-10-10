@@ -3,7 +3,7 @@
   "name": "io.github.yumaheymans/genmagic",
   "title": "GenMagic",
   "description": "Generate images, video, speech, music and text with 450+ AI models, one API key and one balance.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "repository": {
     "url": "https://github.com/yumaheymans/genmagic-mcp",
     "source": "github"
@@ -16,9 +16,22 @@
       "headers": [
         {
           "name": "Authorization",
-          "description": "GenMagic API key as a Bearer token (gm_live_...), created at https://genmagic.co/get-api-key",
+          "description": "GenMagic API key as a Bearer token, created at https://genmagic.co/get-api-key",
           "isRequired": true,
-          "isSecret": true
+          "isSecret": true,
+          "value": "Bearer {api_key}",
+          "variables": {
+            "api_key": {
+              "description": "Your GenMagic API key (gm_live_...), created at https://genmagic.co/get-api-key",
+              "format": "string",
+              "isRequired": true,
+              "isSecret": true
+            }
+          }
+        },
+        {
+          "name": "X-GenMagic-Client",
+          "value": "mcp-registry/1.1.1"
         }
       ]
     }

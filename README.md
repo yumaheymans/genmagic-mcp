@@ -6,7 +6,7 @@ GenMagic is one studio and one API for every generative AI model, in every mediu
 
 - **Endpoint:** `https://genmagic.co/api/mcp`
 - **Transport:** Streamable HTTP (stateless JSON-RPC)
-- **Version:** 1.1.0
+- **Version:** 1.1.1
 - **Auth:** `Authorization: Bearer gm_live_...` (create a key at <https://genmagic.co/get-api-key>)
 - **Hosted:** nothing to install or run. It is a live remote server.
 - **Registry:** listed on the [Official MCP Registry](https://registry.modelcontextprotocol.io) as `io.github.yumaheymans/genmagic` (see [`server.json`](./server.json)).
@@ -38,9 +38,28 @@ claude mcp add --transport http genmagic https://genmagic.co/api/mcp \
   --header "Authorization: Bearer gm_live_your_key"
 ```
 
-### Cursor, VS Code, Windsurf, and most clients
+### VS Code
 
-Add a `genmagic` entry to your MCP config (`.cursor/mcp.json`, `.vscode/mcp.json`, or the client's equivalent):
+One-click install: open <https://genmagic.co/developers#mcp> and choose **Add to VS Code**; VS Code asks for your key once and stores it as a secret. Or add it to `.vscode/mcp.json` yourself:
+
+```json
+{
+  "inputs": [
+    { "type": "promptString", "id": "genmagic-api-key", "description": "GenMagic API key", "password": true }
+  ],
+  "servers": {
+    "genmagic": {
+      "type": "http",
+      "url": "https://genmagic.co/api/mcp",
+      "headers": { "Authorization": "Bearer ${input:genmagic-api-key}" }
+    }
+  }
+}
+```
+
+### Cursor, Windsurf, and most clients
+
+Add a `genmagic` entry to your MCP config (`.cursor/mcp.json`, or the client's equivalent). Cursor also has a one-click **Add to Cursor** at <https://genmagic.co/developers#mcp>.
 
 ```json
 {
